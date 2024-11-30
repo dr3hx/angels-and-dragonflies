@@ -1,29 +1,15 @@
 'use client'
 import { useHeaderTheme } from '@/providers/HeaderTheme'
 import React, { useEffect } from 'react'
-import { RenderHero } from '@/heros/RenderHero'
-import { RenderBlocks } from '@/blocks/RenderBlocks'
-import type { Page } from '@/payload-types'
 
-interface PageClientProps {
-  page: Page
-}
-
-const PageClient: React.FC<PageClientProps> = ({ page }) => {
+const PageClient: React.FC = () => {
+  /* Force the header to be dark mode while we have an image behind it */
   const { setHeaderTheme } = useHeaderTheme()
 
   useEffect(() => {
     setHeaderTheme('light')
   }, [setHeaderTheme])
-
-  const { hero, layout } = page
-
-  return (
-    <React.Fragment>
-      {hero && <RenderHero {...hero} />}
-      {layout && <RenderBlocks blocks={layout} />}
-    </React.Fragment>
-  )
+  return <React.Fragment />
 }
 
 export default PageClient

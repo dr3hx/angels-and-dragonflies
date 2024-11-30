@@ -1,13 +1,10 @@
 'use client'
 
 import type { StaticImageData } from 'next/image'
-
-import { cn } from 'src/utilities/cn'
+import { cn } from '@/utilities/cn'
 import NextImage from 'next/image'
 import React from 'react'
-
 import type { Props as MediaProps } from '../types'
-
 import { cssVariables } from '@/cssVariables'
 import { getClientSideURL } from '@/utilities/getURL'
 
@@ -50,7 +47,8 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
     src = `${getClientSideURL()}${url}`
   }
 
-  const loading = loadingFromProps || 'lazy'
+  // Only set loading if priority is false
+  const loading = priority ? undefined : (loadingFromProps || 'lazy')
 
   // NOTE: this is used by the browser to determine which image to download at different screen sizes
   const sizes = sizeFromProps

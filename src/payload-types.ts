@@ -13,6 +13,8 @@ export interface Config {
   collections: {
     pages: Page;
     posts: Post;
+    programs: Program;
+    events: Event;
     media: Media;
     categories: Category;
     users: User;
@@ -28,6 +30,8 @@ export interface Config {
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
+    programs: ProgramsSelect<false> | ProgramsSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -40,7 +44,7 @@ export interface Config {
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   globals: {
     header: Header;
@@ -82,7 +86,7 @@ export interface UserAuthOperations {
  * via the `definition` "pages".
  */
 export interface Page {
-  id: string;
+  id: number;
   title: string;
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
@@ -108,7 +112,7 @@ export interface Page {
             newTab?: boolean | null;
             reference?: {
               relationTo: 'pages';
-              value: string | Page;
+              value: number | Page;
             } | null;
             url?: string | null;
             label: string;
@@ -117,12 +121,282 @@ export interface Page {
           id?: string | null;
         }[]
       | null;
-    media?: (string | null) | Media;
+    bg?: {
+      img: number | Media;
+      style?: {
+        fit?: ('cover' | 'contain' | 'auto') | null;
+        pos?: ('top' | 'center' | 'bottom') | null;
+        repeat?: ('no-repeat' | 'repeat' | 'repeat-x' | 'repeat-y') | null;
+        fixed?: boolean | null;
+      };
+      overlay?: {
+        enable?: boolean | null;
+        opacity?: number | null;
+      };
+    };
+    scroll?: {
+      enable?: boolean | null;
+      text?: string | null;
+      icon?: ('chevron-down' | 'arrow-down' | 'mouse' | 'circle-arrow') | null;
+      animation?: ('bounce' | 'pulse' | 'fade' | 'none') | null;
+      position?: {
+        bottom?: string | null;
+        color?: string | null;
+      };
+    };
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
+  layout: (
+    | {
+        backgroundColor: 'white' | 'gray' | 'blue' | 'green';
+        layout?: {
+          spacing?: ('small' | 'medium' | 'large') | null;
+        };
+        bg?: {
+          img?: (number | null) | Media;
+          style?: {
+            size?: {
+              mode?: ('cover' | 'contain' | 'custom') | null;
+              width?: string | null;
+              height?: string | null;
+            };
+            position?: {
+              x?: ('left' | 'center' | 'right') | null;
+              y?: ('top' | 'center' | 'bottom') | null;
+              customX?: string | null;
+              customY?: string | null;
+            };
+            repeat?: ('no-repeat' | 'repeat' | 'repeat-x' | 'repeat-y') | null;
+            fixed?: boolean | null;
+          };
+          overlay?: {
+            enable?: boolean | null;
+            opacity?: number | null;
+          };
+        };
+        title?: string | null;
+        description?: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        cards: {
+          title: string;
+          description?: string | null;
+          icon?: {
+            type?: ('preset' | 'custom') | null;
+            preset?: string | null;
+            custom?: (number | null) | Media;
+          };
+          color?: string | null;
+          button?: {
+            label?: string | null;
+            link?: {
+              type?: ('page' | 'custom') | null;
+              page?: (number | null) | Page;
+              url?: string | null;
+            };
+          };
+          id?: string | null;
+        }[];
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'actionCards';
+      }
+    | {
+        backgroundColor: 'white' | 'gray' | 'blue' | 'green';
+        title: string;
+        description: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        bg: {
+          img: number | Media;
+          style?: {
+            size?: {
+              mode?: ('cover' | 'contain' | 'custom') | null;
+              width?: string | null;
+              height?: string | null;
+            };
+            position?: {
+              x?: ('left' | 'center' | 'right') | null;
+              y?: ('top' | 'center' | 'bottom') | null;
+              customX?: string | null;
+              customY?: string | null;
+            };
+            repeat?: ('no-repeat' | 'repeat' | 'repeat-x' | 'repeat-y') | null;
+            fixed?: boolean | null;
+          };
+          overlay?: {
+            enable?: boolean | null;
+            opacity?: number | null;
+          };
+        };
+        button: {
+          label: string;
+          link?: {
+            type?: ('page' | 'custom') | null;
+            page?: (number | null) | Page;
+            url?: string | null;
+          };
+        };
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'requestHelp';
+      }
+    | {
+        backgroundColor: 'white' | 'gray' | 'blue' | 'green';
+        title: string;
+        description?: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        bg?: {
+          img?: (number | null) | Media;
+          style?: {
+            size?: {
+              mode?: ('cover' | 'contain' | 'custom') | null;
+              width?: string | null;
+              height?: string | null;
+            };
+            position?: {
+              x?: ('left' | 'center' | 'right') | null;
+              y?: ('top' | 'center' | 'bottom') | null;
+              customX?: string | null;
+              customY?: string | null;
+            };
+            repeat?: ('no-repeat' | 'repeat' | 'repeat-x' | 'repeat-y') | null;
+            fixed?: boolean | null;
+          };
+          overlay?: {
+            enable?: boolean | null;
+            opacity?: number | null;
+          };
+        };
+        programsToShow?: (number | Program)[] | null;
+        layout?: {
+          style?: ('grid' | 'featured') | null;
+          columns?: ('2' | '3' | '4') | null;
+          spacing?: ('small' | 'medium' | 'large') | null;
+        };
+        button?: {
+          label?: string | null;
+          link?: {
+            type?: ('page' | 'custom') | null;
+            page?: (number | null) | Page;
+            url?: string | null;
+          };
+        };
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'programsGrid';
+      }
+    | {
+        backgroundColor: 'white' | 'gray' | 'blue' | 'green';
+        title: string;
+        description?: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        bg?: {
+          img?: (number | null) | Media;
+          style?: {
+            size?: {
+              mode?: ('cover' | 'contain' | 'custom') | null;
+              width?: string | null;
+              height?: string | null;
+            };
+            position?: {
+              x?: ('left' | 'center' | 'right') | null;
+              y?: ('top' | 'center' | 'bottom') | null;
+              customX?: string | null;
+              customY?: string | null;
+            };
+            repeat?: ('no-repeat' | 'repeat' | 'repeat-x' | 'repeat-y') | null;
+            fixed?: boolean | null;
+          };
+          overlay?: {
+            enable?: boolean | null;
+            opacity?: number | null;
+          };
+        };
+        layout?: {
+          style?: ('list' | 'grid') | null;
+          columns?: ('2' | '3' | '4') | null;
+          spacing?: ('small' | 'medium' | 'large') | null;
+        };
+        showFeaturedEventFirst?: boolean | null;
+        eventsToShow?: number | null;
+        eventDisplay?: {
+          showDate?: boolean | null;
+          showTime?: boolean | null;
+          showLocation?: boolean | null;
+          showDescription?: boolean | null;
+          showImage?: boolean | null;
+        };
+        button?: {
+          label?: string | null;
+          link?: {
+            type?: ('page' | 'custom') | null;
+            page?: (number | null) | Page;
+            url?: string | null;
+          };
+        };
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'eventsList';
+      }
+    | CallToActionBlock
+    | ContentBlock
+    | MediaBlock
+    | ArchiveBlock
+    | FormBlock
+  )[];
   meta?: {
     title?: string | null;
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
     description?: string | null;
   };
   publishedAt?: string | null;
@@ -137,7 +411,7 @@ export interface Page {
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
+  id: number;
   alt?: string | null;
   caption?: {
     root: {
@@ -218,6 +492,37 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programs".
+ */
+export interface Program {
+  id: number;
+  title: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image: number | Media;
+  featured?: boolean | null;
+  publishedAt?: string | null;
+  slug?: string | null;
+  slugLock?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "CallToActionBlock".
  */
 export interface CallToActionBlock {
@@ -243,7 +548,7 @@ export interface CallToActionBlock {
           newTab?: boolean | null;
           reference?: {
             relationTo: 'pages';
-            value: string | Page;
+            value: number | Page;
           } | null;
           url?: string | null;
           label: string;
@@ -285,7 +590,7 @@ export interface ContentBlock {
           newTab?: boolean | null;
           reference?: {
             relationTo: 'pages';
-            value: string | Page;
+            value: number | Page;
           } | null;
           url?: string | null;
           label: string;
@@ -303,7 +608,7 @@ export interface ContentBlock {
  * via the `definition` "MediaBlock".
  */
 export interface MediaBlock {
-  media: string | Media;
+  media: number | Media;
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
@@ -330,12 +635,12 @@ export interface ArchiveBlock {
   } | null;
   populateBy?: ('collection' | 'selection') | null;
   relationTo?: 'posts' | null;
-  categories?: (string | Category)[] | null;
+  categories?: (number | Category)[] | null;
   limit?: number | null;
   selectedDocs?:
     | {
         relationTo: 'posts';
-        value: string | Post;
+        value: number | Post;
       }[]
     | null;
   id?: string | null;
@@ -347,12 +652,13 @@ export interface ArchiveBlock {
  * via the `definition` "categories".
  */
 export interface Category {
-  id: string;
+  id: number;
   title: string;
-  parent?: (string | null) | Category;
+  description?: string | null;
+  parent?: (number | null) | Category;
   breadcrumbs?:
     | {
-        doc?: (string | null) | Category;
+        doc?: (number | null) | Category;
         url?: string | null;
         label?: string | null;
         id?: string | null;
@@ -366,7 +672,7 @@ export interface Category {
  * via the `definition` "posts".
  */
 export interface Post {
-  id: string;
+  id: number;
   title: string;
   content: {
     root: {
@@ -383,15 +689,15 @@ export interface Post {
     };
     [k: string]: unknown;
   };
-  relatedPosts?: (string | Post)[] | null;
-  categories?: (string | Category)[] | null;
+  relatedPosts?: (number | Post)[] | null;
+  categories?: (number | Category)[] | null;
   meta?: {
     title?: string | null;
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
     description?: string | null;
   };
   publishedAt?: string | null;
-  authors?: (string | User)[] | null;
+  authors?: (number | User)[] | null;
   populatedAuthors?:
     | {
         id?: string | null;
@@ -409,7 +715,7 @@ export interface Post {
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
+  id: number;
   name?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -427,7 +733,7 @@ export interface User {
  * via the `definition` "FormBlock".
  */
 export interface FormBlock {
-  form: string | Form;
+  form: number | Form;
   enableIntro?: boolean | null;
   introContent?: {
     root: {
@@ -453,7 +759,7 @@ export interface FormBlock {
  * via the `definition` "forms".
  */
 export interface Form {
-  id: string;
+  id: number;
   title: string;
   fields?:
     | (
@@ -614,21 +920,54 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  title: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  startDate: string;
+  endDate: string;
+  image: number | Media;
+  active?: boolean | null;
+  publishedAt?: string | null;
+  slug?: string | null;
+  slugLock?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
-  id: string;
+  id: number;
   from: string;
   to?: {
     type?: ('reference' | 'custom') | null;
     reference?:
       | ({
           relationTo: 'pages';
-          value: string | Page;
+          value: number | Page;
         } | null)
       | ({
           relationTo: 'posts';
-          value: string | Post;
+          value: number | Post;
         } | null);
     url?: string | null;
   };
@@ -640,8 +979,8 @@ export interface Redirect {
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
-  id: string;
-  form: string | Form;
+  id: number;
+  form: number | Form;
   submissionData?:
     | {
         field: string;
@@ -657,18 +996,18 @@ export interface FormSubmission {
  * via the `definition` "search".
  */
 export interface Search {
-  id: string;
+  id: number;
   title?: string | null;
   priority?: number | null;
   doc: {
     relationTo: 'posts';
-    value: string | Post;
+    value: number | Post;
   };
   slug?: string | null;
   meta?: {
     title?: string | null;
     description?: string | null;
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
   };
   categories?:
     | {
@@ -685,48 +1024,56 @@ export interface Search {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
         relationTo: 'pages';
-        value: string | Page;
+        value: number | Page;
       } | null)
     | ({
         relationTo: 'posts';
-        value: string | Post;
+        value: number | Post;
+      } | null)
+    | ({
+        relationTo: 'programs';
+        value: number | Program;
+      } | null)
+    | ({
+        relationTo: 'events';
+        value: number | Event;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
       } | null)
     | ({
         relationTo: 'categories';
-        value: string | Category;
+        value: number | Category;
       } | null)
     | ({
         relationTo: 'users';
-        value: string | User;
+        value: number | User;
       } | null)
     | ({
         relationTo: 'redirects';
-        value: string | Redirect;
+        value: number | Redirect;
       } | null)
     | ({
         relationTo: 'forms';
-        value: string | Form;
+        value: number | Form;
       } | null)
     | ({
         relationTo: 'form-submissions';
-        value: string | FormSubmission;
+        value: number | FormSubmission;
       } | null)
     | ({
         relationTo: 'search';
-        value: string | Search;
+        value: number | Search;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -736,10 +1083,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -759,7 +1106,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -791,11 +1138,301 @@ export interface PagesSelect<T extends boolean = true> {
                   };
               id?: T;
             };
-        media?: T;
+        bg?:
+          | T
+          | {
+              img?: T;
+              style?:
+                | T
+                | {
+                    fit?: T;
+                    pos?: T;
+                    repeat?: T;
+                    fixed?: T;
+                  };
+              overlay?:
+                | T
+                | {
+                    enable?: T;
+                    opacity?: T;
+                  };
+            };
+        scroll?:
+          | T
+          | {
+              enable?: T;
+              text?: T;
+              icon?: T;
+              animation?: T;
+              position?:
+                | T
+                | {
+                    bottom?: T;
+                    color?: T;
+                  };
+            };
       };
   layout?:
     | T
     | {
+        actionCards?:
+          | T
+          | {
+              backgroundColor?: T;
+              layout?:
+                | T
+                | {
+                    spacing?: T;
+                  };
+              bg?:
+                | T
+                | {
+                    img?: T;
+                    style?:
+                      | T
+                      | {
+                          size?:
+                            | T
+                            | {
+                                mode?: T;
+                                width?: T;
+                                height?: T;
+                              };
+                          position?:
+                            | T
+                            | {
+                                x?: T;
+                                y?: T;
+                                customX?: T;
+                                customY?: T;
+                              };
+                          repeat?: T;
+                          fixed?: T;
+                        };
+                    overlay?:
+                      | T
+                      | {
+                          enable?: T;
+                          opacity?: T;
+                        };
+                  };
+              title?: T;
+              description?: T;
+              cards?:
+                | T
+                | {
+                    title?: T;
+                    description?: T;
+                    icon?:
+                      | T
+                      | {
+                          type?: T;
+                          preset?: T;
+                          custom?: T;
+                        };
+                    color?: T;
+                    button?:
+                      | T
+                      | {
+                          label?: T;
+                          link?:
+                            | T
+                            | {
+                                type?: T;
+                                page?: T;
+                                url?: T;
+                              };
+                        };
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        requestHelp?:
+          | T
+          | {
+              backgroundColor?: T;
+              title?: T;
+              description?: T;
+              bg?:
+                | T
+                | {
+                    img?: T;
+                    style?:
+                      | T
+                      | {
+                          size?:
+                            | T
+                            | {
+                                mode?: T;
+                                width?: T;
+                                height?: T;
+                              };
+                          position?:
+                            | T
+                            | {
+                                x?: T;
+                                y?: T;
+                                customX?: T;
+                                customY?: T;
+                              };
+                          repeat?: T;
+                          fixed?: T;
+                        };
+                    overlay?:
+                      | T
+                      | {
+                          enable?: T;
+                          opacity?: T;
+                        };
+                  };
+              button?:
+                | T
+                | {
+                    label?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          url?: T;
+                        };
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        programsGrid?:
+          | T
+          | {
+              backgroundColor?: T;
+              title?: T;
+              description?: T;
+              bg?:
+                | T
+                | {
+                    img?: T;
+                    style?:
+                      | T
+                      | {
+                          size?:
+                            | T
+                            | {
+                                mode?: T;
+                                width?: T;
+                                height?: T;
+                              };
+                          position?:
+                            | T
+                            | {
+                                x?: T;
+                                y?: T;
+                                customX?: T;
+                                customY?: T;
+                              };
+                          repeat?: T;
+                          fixed?: T;
+                        };
+                    overlay?:
+                      | T
+                      | {
+                          enable?: T;
+                          opacity?: T;
+                        };
+                  };
+              programsToShow?: T;
+              layout?:
+                | T
+                | {
+                    style?: T;
+                    columns?: T;
+                    spacing?: T;
+                  };
+              button?:
+                | T
+                | {
+                    label?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          url?: T;
+                        };
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        eventsList?:
+          | T
+          | {
+              backgroundColor?: T;
+              title?: T;
+              description?: T;
+              bg?:
+                | T
+                | {
+                    img?: T;
+                    style?:
+                      | T
+                      | {
+                          size?:
+                            | T
+                            | {
+                                mode?: T;
+                                width?: T;
+                                height?: T;
+                              };
+                          position?:
+                            | T
+                            | {
+                                x?: T;
+                                y?: T;
+                                customX?: T;
+                                customY?: T;
+                              };
+                          repeat?: T;
+                          fixed?: T;
+                        };
+                    overlay?:
+                      | T
+                      | {
+                          enable?: T;
+                          opacity?: T;
+                        };
+                  };
+              layout?:
+                | T
+                | {
+                    style?: T;
+                    columns?: T;
+                    spacing?: T;
+                  };
+              showFeaturedEventFirst?: T;
+              eventsToShow?: T;
+              eventDisplay?:
+                | T
+                | {
+                    showDate?: T;
+                    showTime?: T;
+                    showLocation?: T;
+                    showDescription?: T;
+                    showImage?: T;
+                  };
+              button?:
+                | T
+                | {
+                    label?: T;
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          page?: T;
+                          url?: T;
+                        };
+                  };
+              id?: T;
+              blockName?: T;
+            };
         cta?:
           | T
           | {
@@ -874,11 +1511,9 @@ export interface PagesSelect<T extends boolean = true> {
   meta?:
     | T
     | {
-        overview?: T;
         title?: T;
         image?: T;
         description?: T;
-        preview?: T;
       };
   publishedAt?: T;
   slug?: T;
@@ -899,11 +1534,9 @@ export interface PostsSelect<T extends boolean = true> {
   meta?:
     | T
     | {
-        overview?: T;
         title?: T;
         image?: T;
         description?: T;
-        preview?: T;
       };
   publishedAt?: T;
   authors?: T;
@@ -913,6 +1546,40 @@ export interface PostsSelect<T extends boolean = true> {
         id?: T;
         name?: T;
       };
+  slug?: T;
+  slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programs_select".
+ */
+export interface ProgramsSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  image?: T;
+  featured?: T;
+  publishedAt?: T;
+  slug?: T;
+  slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  startDate?: T;
+  endDate?: T;
+  image?: T;
+  active?: T;
+  publishedAt?: T;
   slug?: T;
   slugLock?: T;
   updatedAt?: T;
@@ -1008,6 +1675,7 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface CategoriesSelect<T extends boolean = true> {
   title?: T;
+  description?: T;
   parent?: T;
   breadcrumbs?:
     | T
@@ -1208,7 +1876,6 @@ export interface SearchSelect<T extends boolean = true> {
   title?: T;
   priority?: T;
   doc?: T;
-  docUrl?: T;
   slug?: T;
   meta?:
     | T
@@ -1264,7 +1931,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  * via the `definition` "header".
  */
 export interface Header {
-  id: string;
+  id: number;
   navItems?:
     | {
         link: {
@@ -1272,7 +1939,7 @@ export interface Header {
           newTab?: boolean | null;
           reference?: {
             relationTo: 'pages';
-            value: string | Page;
+            value: number | Page;
           } | null;
           url?: string | null;
           label: string;
@@ -1288,7 +1955,7 @@ export interface Header {
  * via the `definition` "footer".
  */
 export interface Footer {
-  id: string;
+  id: number;
   navItems?:
     | {
         link: {
@@ -1296,7 +1963,7 @@ export interface Footer {
           newTab?: boolean | null;
           reference?: {
             relationTo: 'pages';
-            value: string | Page;
+            value: number | Page;
           } | null;
           url?: string | null;
           label: string;

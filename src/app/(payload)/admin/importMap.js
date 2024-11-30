@@ -18,8 +18,10 @@ import { HorizontalRuleFeatureClient as HorizontalRuleFeatureClient_e70f5e05f09f
 import { BlocksFeatureClient as BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { LinkToDoc as LinkToDoc_aead06e4cbf6b2620c5c51c9ab283634 } from '@payloadcms/plugin-search/client'
 import { ReindexButton as ReindexButton_aead06e4cbf6b2620c5c51c9ab283634 } from '@payloadcms/plugin-search/client'
-import { default as default_1a7510af427896d367a49dbf838d2de6 } from '@/components/BeforeDashboard'
-import { default as default_8a7ab0eb7ab5c511aba12e68480bfe5e } from '@/components/BeforeLogin'
+import { default as default_cd93ddffdfde57d1140eefcade7748ee } from 'components/Nav/index'
+import { default as default_724efd324d5d61744d1ec9eabe5c7240 } from 'components/Graphics/Icon'
+import { default as default_c17bb2f27e37bfeea69e5b39e7194e36 } from 'components/Graphics/Logo'
+import { default as default_08a6819b27e4ed2b21bf6fa7be01365b } from 'components/Dashboard/index'
 
 export const importMap = {
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -42,6 +44,8 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BlocksFeatureClient": BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/plugin-search/client#LinkToDoc": LinkToDoc_aead06e4cbf6b2620c5c51c9ab283634,
   "@payloadcms/plugin-search/client#ReindexButton": ReindexButton_aead06e4cbf6b2620c5c51c9ab283634,
-  "@/components/BeforeDashboard#default": default_1a7510af427896d367a49dbf838d2de6,
-  "@/components/BeforeLogin#default": default_8a7ab0eb7ab5c511aba12e68480bfe5e
+  "components/Nav/index#default": default_cd93ddffdfde57d1140eefcade7748ee,
+  "components/Graphics/Icon#default": default_724efd324d5d61744d1ec9eabe5c7240,
+  "components/Graphics/Logo#default": default_c17bb2f27e37bfeea69e5b39e7194e36,
+  "components/Dashboard/index#default": default_08a6819b27e4ed2b21bf6fa7be01365b
 }

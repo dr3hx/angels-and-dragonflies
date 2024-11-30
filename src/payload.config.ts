@@ -1,6 +1,5 @@
-// storage-adapter-import-placeholder
 import { postgresAdapter } from '@payloadcms/db-postgres'
-import sharp from 'sharp' // sharp-import
+import sharp from 'sharp'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -15,20 +14,56 @@ import { Events } from './collections/Events'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
-import { defaultLexical } from '@/fields/defaultLexical'
+import { defaultLexical } from './fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+// Add admin groups to collections
+const enhanceCollection = (collection: any, group: string) => ({
+  ...collection,
+  admin: {
+    ...collection.admin,
+    group,
+  },
+})
+
 export default buildConfig({
   admin: {
     components: {
-      beforeLogin: ['@/components/BeforeLogin'],
-      beforeDashboard: ['@/components/BeforeDashboard'],
+      // Replace default dashboard
+      views: {
+        Dashboard: {
+          path: 'components/Dashboard',
+          Component: 'components/Dashboard',
+        }
+      },
+      // Custom navigation
+      Nav: {
+        path: 'components/Navigation',
+      },
+      // Custom header actions
+      actions: [
+        {
+          path: 'components/Header/Actions',
+        }
+      ],
+      // Custom branding
+      graphics: {
+        Icon: {
+          path: 'components/Graphics/Icon',
+        },
+        Logo: {
+          path: 'components/Graphics/Logo',
+        },
+      },
+    },
+    meta: {
+      titleSuffix: '- Marketing Backend',
     },
     importMap: {
-      baseDir: path.resolve(dirname),
+      baseDir: path.resolve(dirname, 'src'),
     },
     user: Users.slug,
     livePreview: {
@@ -61,19 +96,33 @@ export default buildConfig({
     },
   }),
   collections: [
-    Pages,
-    Posts,
-    Programs, // Added Programs collection
-    Events,   // Added Events collection
-    Media,
-    Categories,
+    enhanceCollection(Pages, 'Content Management'),
+    enhanceCollection(Posts, 'Content Management'),
+    enhanceCollection(Programs, 'Programs & Events'),
+    enhanceCollection(Events, 'Programs & Events'),
+    enhanceCollection(Media, 'Assets'),
+    enhanceCollection(Categories, 'Configuration'),
     Users,
   ],
+  globals: [
+    {
+      ...Header,
+      admin: {
+        ...Header.admin,
+        group: 'Configuration',
+      }
+    },
+    {
+      ...Footer,
+      admin: {
+        ...Footer.admin,
+        group: 'Configuration',
+      }
+    }
+  ],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer],
   plugins: [
     ...plugins,
-    // storage-adapter-placeholder
   ],
   secret: process.env.PAYLOAD_SECRET,
   sharp,

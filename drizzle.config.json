@@ -1,0 +1,11 @@
+{
+  "schema": "./src/db/schema.ts",
+  "out": "./src/db/migrations",
+  "driver": "pg",
+  "dbCredentials": {
+    "connectionString": "postgresql://postgres:postgres@localhost:5432/angels_and_dragonflies"
+  },
+  "tablesFilter": ["!migrations"],
+  "verbose": true,
+  "strict": true
+}
