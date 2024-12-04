@@ -1,0 +1,120 @@
+@import '~@payloadcms/ui/scss';
+
+.nav-section {
+  &__header {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      .nav-section__icon {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__icon {
+    opacity: 0.5;
+    transition: all 0.2s ease;
+  }
+
+  &__content {
+    transition: height 0.2s ease, opacity 0.2s ease;
+    height: auto;
+
+    &[data-collapsed="true"] {
+      height: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+}
+
+// Storage info card
+.storage-info {
+  background: hsl(var(--muted) / 0.5);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin: 1rem;
+
+  .progress-bar {
+    height: 0.5rem;
+    background: hsl(var(--muted));
+    border-radius: 9999px;
+    overflow: hidden;
+
+    .progress {
+      height: 100%;
+      background: hsl(var(--primary));
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+    }
+  }
+}
+
+// Nav items
+.nav-item {
+  position: relative;
+  transition: all 0.2s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 0;
+    background: hsl(var(--primary));
+    border-radius: 0 4px 4px 0;
+    transition: height 0.2s ease;
+  }
+
+  &.active {
+    &::before {
+      height: 60%;
+    }
+  }
+
+  // Touch feedback
+  @media (max-width: 1023px) {
+    &:active {
+      background: hsl(var(--muted) / 0.8);
+    }
+  }
+}
+
+// Section title
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: var(--radius);
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background: hsl(var(--muted) / 0.5);
+  }
+
+  .chevron {
+    transition: transform 0.2s ease;
+
+    &[data-collapsed="true"] {
+      transform: rotate(-90deg);
+    }
+  }
+}
+
+// Section content
+.section-content {
+  overflow: hidden;
+  transition: height 0.2s ease, opacity 0.2s ease;
+
+  &[data-collapsed="true"] {
+    height: 0 !important;
+    opacity: 0;
+  }
+}

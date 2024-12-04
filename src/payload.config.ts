@@ -3,6 +3,7 @@ import sharp from 'sharp'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
+import type { CollectionConfig } from 'payload'
 
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
@@ -20,8 +21,11 @@ import { getServerSideURL } from './utilities/getURL'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// Add admin groups to collections
-const enhanceCollection = (collection: any, group: string) => ({
+// Define valid group names as a type
+type GroupName = 'Menu' | 'Collections' | 'Content Management' | 'Programs & Events' | 'Assets' | 'Configuration'
+
+// Type-safe group enhancement
+const enhanceCollection = (collection: CollectionConfig, group: GroupName): CollectionConfig => ({
   ...collection,
   admin: {
     ...collection.admin,
@@ -30,42 +34,47 @@ const enhanceCollection = (collection: any, group: string) => ({
 })
 
 export default buildConfig({
+  serverURL: getServerSideURL(),
   admin: {
+    user: Users.slug,
     components: {
-      // Replace default dashboard
-      views: {
-        Dashboard: {
-          path: 'components/Dashboard',
-          Component: 'components/Dashboard',
-        }
-      },
-      // Custom navigation
+      // Theme provider
+      providers: [{
+        path: 'src/providers',
+        exportName: 'Component'
+      }],
+      // Navigation components
       Nav: {
-        path: 'components/Navigation',
+        path: 'src/components/admin/collapsibleNav',
       },
-      // Custom header actions
-      actions: [
-        {
-          path: 'components/Header/Actions',
-        }
-      ],
-      // Custom branding
+      afterNavLinks: [{
+        path: 'src/components/admin/AfterNavLinks',
+      }],
+      // Custom header
+      header: [{
+        path: 'src/components/admin/Header',
+      }],
+      // Graphics
       graphics: {
         Icon: {
-          path: 'components/Graphics/Icon',
+          path: 'src/components/admin/Graphics/Icon',
         },
         Logo: {
-          path: 'components/Graphics/Logo',
+          path: 'src/components/admin/Graphics/Icon',
         },
       },
-    },
-    meta: {
-      titleSuffix: '- Marketing Backend',
+      
+      // The `BeforeLogin` component renders a message that you see while logging into your admin panel
+      beforeLogin: ['src/components/BeforeLogin'],
+      // The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel
+      beforeDashboard: ['src/components/BeforeDashboard'],
     },
     importMap: {
-      baseDir: path.resolve(dirname, 'src'),
+      baseDir: path.resolve(dirname),
     },
-    user: Users.slug,
+    meta: {
+      titleSuffix: '- Angels and Dragonflies CMS',
+    },
     livePreview: {
       breakpoints: [
         {
@@ -96,13 +105,26 @@ export default buildConfig({
     },
   }),
   collections: [
+    // Content Management group
     enhanceCollection(Pages, 'Content Management'),
     enhanceCollection(Posts, 'Content Management'),
+
+    // Programs & Events group
     enhanceCollection(Programs, 'Programs & Events'),
     enhanceCollection(Events, 'Programs & Events'),
+
+    // Assets group
     enhanceCollection(Media, 'Assets'),
+
+    // Configuration group
     enhanceCollection(Categories, 'Configuration'),
-    Users,
+    {
+      ...Users,
+      admin: {
+        ...Users.admin,
+        group: 'Configuration' as GroupName,
+      },
+    },
   ],
   globals: [
     {
@@ -129,4 +151,4 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-})
+});

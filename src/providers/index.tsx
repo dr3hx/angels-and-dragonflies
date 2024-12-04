@@ -1,14 +1,27 @@
-import React from 'react'
+'use client';
 
-import { HeaderThemeProvider } from './HeaderTheme'
-import { ThemeProvider } from './Theme'
+import React from 'react';
+import { PreferencesProvider } from '@payloadcms/ui';
+import { NavProvider } from './admin/NavProvider';
+import { ThemeProvider } from './Theme';
+import { HeaderThemeProvider } from './HeaderTheme';
 
-export const Providers: React.FC<{
-  children: React.ReactNode
+// Export the Component that Payload will use to wrap the admin panel
+export const Component: React.FC<{
+  children: React.ReactNode;
 }> = ({ children }) => {
   return (
-    <ThemeProvider>
-      <HeaderThemeProvider>{children}</HeaderThemeProvider>
-    </ThemeProvider>
-  )
-}
+    <PreferencesProvider>
+      <ThemeProvider>
+        <HeaderThemeProvider>
+          <NavProvider>
+            {children}
+          </NavProvider>
+        </HeaderThemeProvider>
+      </ThemeProvider>
+    </PreferencesProvider>
+  );
+};
+
+// Also export as default for direct imports if needed
+export default Component;

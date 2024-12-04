@@ -1,66 +1,44 @@
-import { Button, type ButtonProps } from '@/components/ui/button'
-import { cn } from 'src/utilities/cn'
-import Link from 'next/link'
-import React from 'react'
+'use client';
 
-import type { Page, Post } from '@/payload-types'
+import React from 'react';
+import NextLink from 'next/link';
+import { useRouter } from 'next/navigation';
 
-type CMSLinkType = {
-  appearance?: 'inline' | ButtonProps['variant']
-  children?: React.ReactNode
-  className?: string
-  label?: string | null
-  newTab?: boolean | null
-  reference?: {
-    relationTo: 'pages' | 'posts'
-    value: Page | Post | string | number
-  } | null
-  size?: ButtonProps['size'] | null
-  type?: 'custom' | 'reference' | null
-  url?: string | null
-}
+type Props = {
+  children: React.ReactNode;
+  className?: string;
+  href: string;
+  onClick?: () => void;
+  onMouseEnter?: () => void;
+  target?: string;
+};
 
-export const CMSLink: React.FC<CMSLinkType> = (props) => {
-  const {
-    type,
-    appearance = 'inline',
-    children,
-    className,
-    label,
-    newTab,
-    reference,
-    size: sizeFromProps,
-    url,
-  } = props
+const Link: React.FC<Props> = ({ children, className, href, onClick, onMouseEnter, target }) => {
+  const router = useRouter();
 
-  const href =
-    type === 'reference' && typeof reference?.value === 'object' && reference.value.slug
-      ? `${reference?.relationTo !== 'pages' ? `/${reference?.relationTo}` : ''}/${
-          reference.value.slug
-        }`
-      : url
+  const handleClick = (e: React.MouseEvent) => {
+    if (onClick) {
+      e.preventDefault();
+      onClick();
+    } else if (target !== '_blank') {
+      e.preventDefault();
+      router.push(href);
+    }
+  };
 
-  if (!href) return null
-
-  const size = appearance === 'link' ? 'clear' : sizeFromProps
-  const newTabProps = newTab ? { rel: 'noopener noreferrer', target: '_blank' } : {}
-
-  /* Ensure we don't break any styles set by richText */
-  if (appearance === 'inline') {
+  if (target === '_blank') {
     return (
-      <Link className={cn(className)} href={href || url || ''} {...newTabProps}>
-        {label && label}
-        {children && children}
-      </Link>
-    )
+      <a href={href} className={className} target={target} rel="noopener noreferrer">
+        {children}
+      </a>
+    );
   }
 
   return (
-    <Button asChild className={className} size={size} variant={appearance}>
-      <Link className={cn(className)} href={href || url || ''} {...newTabProps}>
-        {label && label}
-        {children && children}
-      </Link>
-    </Button>
-  )
-}
+    <NextLink href={href} className={className} onClick={handleClick} onMouseEnter={onMouseEnter}>
+      {children}
+    </NextLink>
+  );
+};
+
+export default Link;

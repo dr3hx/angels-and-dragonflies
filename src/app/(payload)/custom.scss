@@ -1,257 +1,238 @@
+@import '~@payloadcms/ui/scss';
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --theme-elevation-0: #ffffff;
-  --theme-elevation-50: #f8f9fc;
-  --theme-elevation-100: #f3f4f6;
-  --theme-elevation-200: #e5e7eb;
-  --theme-elevation-300: #d1d5db;
-  --theme-elevation-400: #9ca3af;
-  --theme-elevation-500: #6b7280;
-  --theme-elevation-600: #4b5563;
-  --theme-elevation-700: #374151;
-  --theme-elevation-800: #1f2937;
-  --theme-elevation-900: #111827;
-  
-  --theme-success-50: #f0fdf4;
-  --theme-success-100: #dcfce7;
-  --theme-success-500: #22c55e;
-  --theme-success-700: #15803d;
-  
-  --theme-warning-50: #fffbeb;
-  --theme-warning-100: #fef3c7;
-  --theme-warning-500: #f59e0b;
-  --theme-warning-700: #b45309;
-  
-  --theme-error-50: #fef2f2;
-  --theme-error-100: #fee2e2;
-  --theme-error-500: #ef4444;
-  --theme-error-700: #b91c1c;
-
-  --theme-bg: var(--theme-elevation-0);
-  --theme-input-bg: var(--theme-elevation-50);
-  --theme-text: var(--theme-elevation-900);
-  --theme-border-color: var(--theme-elevation-200);
-  --theme-primary: #6366f1;
-  --theme-primary-hover: #4f46e5;
-}
-
-[data-theme='dark'] {
-  --theme-bg: var(--theme-elevation-900);
-  --theme-input-bg: var(--theme-elevation-800);
-  --theme-text: var(--theme-elevation-50);
-  --theme-border-color: var(--theme-elevation-700);
-  --theme-primary: #818cf8;
-  --theme-primary-hover: #6366f1;
-}
-
+// Our custom styles should be in the payload layer to ensure proper specificity
 @layer payload {
-  .payload__sidebar {
-    background: var(--theme-primary);
+  :root {
+    // Navigation dimensions
+    --nav-width: 280px;
+    --nav-width-collapsed: 80px;
+    --nav-height: 64px;
 
-    .nav {
-      &__label {
-        color: rgba(255, 255, 255, 0.7);
-      }
+    // Theme colors (shadcn)
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+  }
 
-      &__link {
-        color: rgba(255, 255, 255, 0.9);
+  [data-theme='dark'] {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
 
-        &:hover {
-          background: rgba(255, 255, 255, 0.1);
-        }
-
-        &--active {
-          background: rgba(255, 255, 255, 0.15);
-          color: white;
-        }
-
-        svg {
-          fill: currentColor;
-        }
-      }
+// Override PayloadCMS default styles
+@layer payload-default {
+  // Style PayloadCMS nav togglers to be invisible but functional
+  .nav-toggler,
+  .nav__toggle,
+  .app-header__nav-toggler,
+  .app-header__nav-toggle,
+  .template-default__nav-toggler {
+    &:not(.nav__toggle) {
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
     }
   }
 
-  // Custom Navigation
-  .custom-nav {
+  // Basic layout structure
+  .template-default {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem;
+    min-height: 100vh;
+    background: hsl(var(--background));
+    position: relative;
+    overflow-x: hidden;
 
-    .navigation-menu {
-      flex: 1;
-
-      &__list {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-      }
-
-      &__link {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: var(--theme-elevation-500);
-        transition: color 150ms;
-
-        &:hover {
-          color: var(--theme-text);
-        }
-
-        svg {
-          width: 1rem;
-          height: 1rem;
-        }
-      }
-
-      &__content {
-        border-radius: 0.5rem;
-        border: 1px solid var(--theme-border-color);
-        background-color: var(--theme-bg);
-        padding: 1rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-
-      &__trigger {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: var(--theme-elevation-500);
-        transition: color 150ms;
-
-        &:hover {
-          color: var(--theme-text);
-        }
-      }
+    // Navigation backdrop for mobile
+    &::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: hsl(var(--foreground) / 0.4);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      z-index: 49;
+      backdrop-filter: blur(4px);
+      pointer-events: none;
     }
 
-    .sheet {
-      &__content {
-        padding: 1.5rem;
+    &[data-nav-open="true"]::before {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
 
-        nav {
-          a {
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--theme-elevation-500);
-            transition: color 150ms;
-
-            &:hover {
-              color: var(--theme-text);
-            }
-          }
-
-          h6 {
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--theme-elevation-500);
-            margin-top: 1rem;
-          }
-        }
+      @media (min-width: 1024px) {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
       }
-
-      &__trigger {
-        margin-left: -1rem;
-        padding: 1rem;
-      }
-    }
-
-    @media (max-width: 768px) {
-      padding: 1rem;
     }
   }
 
-  .dashboard {
-    &__card {
-      background: var(--theme-elevation-0);
-      border: 1px solid var(--theme-border-color);
-      border-radius: 0.75rem;
-      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      padding: 1.5rem;
+  // Navigation styles
+  .template-default__nav {
+    width: var(--nav-width);
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, width;
+    background: hsl(var(--background));
+    border-right: 1px solid hsl(var(--border));
 
-      &-header {
-        margin-bottom: 1rem;
+    @media (min-width: 1024px) {
+      transform: translateX(0);
 
-        h3 {
-          color: var(--theme-text);
-          font-size: 0.875rem;
-          font-weight: 600;
-        }
-      }
-
-      &-metrics {
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-
-        .metric {
-          &__value {
-            color: var(--theme-primary);
-            font-size: 1.875rem;
-            font-weight: 700;
-            line-height: 1;
-          }
-
-          &__label {
-            color: var(--theme-elevation-500);
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-          }
-        }
+      &[data-nav-collapsed="true"] {
+        width: var(--nav-width-collapsed);
       }
     }
 
-    &__chart {
-      background: var(--theme-elevation-0);
-      border: 1px solid var(--theme-border-color);
-      border-radius: 0.75rem;
-      margin-top: 1.5rem;
-      padding: 1.5rem;
+    @media (max-width: 1023px) {
+      &[data-nav-open="true"] {
+        transform: translateX(0);
+      }
     }
   }
 
-  .field-type {
-    margin-bottom: 1.5rem;
+  // Main content wrapper
+  .template-default__wrap {
+    flex: 1;
+    min-width: 0;
+    min-height: 100vh;
+    background: hsl(var(--background));
+    position: relative;
+    z-index: 1;
+    transform: translateX(var(--nav-width));
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
 
-    &__label {
-      color: var(--theme-elevation-600);
-      font-size: 0.875rem;
-      font-weight: 500;
-      margin-bottom: 0.5rem;
+    @media (min-width: 1024px) {
+      &[data-nav-collapsed="true"] {
+        transform: translateX(var(--nav-width-collapsed));
+      }
     }
 
-    input, select, textarea {
-      background: var(--theme-input-bg);
-      border: 1px solid var(--theme-border-color);
-      border-radius: 0.5rem;
-      color: var(--theme-text);
-      font-size: 0.875rem;
-      padding: 0.625rem 0.75rem;
-      transition: all 150ms;
+    @media (max-width: 1023px) {
+      transform: translateX(0);
+    }
+  }
+
+  // Content area styles
+  .dashboard,
+  .collection-list,
+  .collection-edit,
+  .global-edit {
+    padding: 2rem;
+    margin-top: var(--nav-height);
+    min-height: calc(100vh - var(--nav-height));
+    background: hsl(var(--background));
+  }
+
+  // Admin header styles
+  .admin-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: calc(100% - var(--nav-width));
+    height: var(--nav-height);
+    z-index: 45;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: hsl(var(--background));
+    border-bottom: 1px solid hsl(var(--border));
+
+    @media (min-width: 1024px) {
+      &[data-nav-collapsed="true"] {
+        width: calc(100% - var(--nav-width-collapsed));
+      }
+    }
+
+    @media (max-width: 1023px) {
       width: 100%;
 
-      &:focus {
-        border-color: var(--theme-primary);
-        outline: none;
-        ring: 1px var(--theme-primary);
+      .search-container {
+        max-width: none;
+        margin: 0 1rem;
       }
     }
   }
 
-  .btn {
-    &--style-primary {
-      background: var(--theme-primary);
-      
-      &:hover {
-        background: var(--theme-primary-hover);
-      }
+  // Nav toggle button
+  .nav__toggle {
+    position: fixed;
+    top: calc(var(--nav-height) + 1rem);
+    left: calc(var(--nav-width) - 1rem);
+    z-index: 51;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 1;
+    pointer-events: all;
+
+    &[data-nav-collapsed="true"] {
+      left: calc(var(--nav-width-collapsed) - 1rem);
     }
+
+    @media (max-width: 1023px) {
+      display: none !important;
+    }
+  }
+}
+
+// Global styles that don't need to be in a layer
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--muted));
+  border-radius: 9999px;
+
+  &:hover {
+    background-color: hsl(var(--muted-foreground) / 0.5);
   }
 }
